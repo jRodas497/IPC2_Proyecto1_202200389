@@ -1,6 +1,10 @@
-from .nodo import Nodo
+'''
+-----    LISTA CIRCULAR TRONCAL    -----
+'''
 
-class listaCircular:
+from .nodo_Troncal import Nodo_Troncal as Nodo
+
+class lista_Troncal:
     def __init__(self):
         self.primero = None
         self.size = 0
