@@ -1,12 +1,12 @@
-from Listas_Binaria.listaC_Binaria import listaC_Binaria
+from Listas.ListaC import ListaC
 
-class Matriz_Binaria:
+class Matrices:
     def __init__(self, filas, columnas, nombre):
         self.filas = filas
         self.columnas = columnas
         self.nombre = nombre
-        self.datos = listaC_Binaria()
-        self.contador_datos = 0
+        self.datos = ListaC()
+        self.contador_datos = 0 
 
     def insertar(self, x, y, dato):
         if self.contador_datos < self.filas * self.columnas:
@@ -39,23 +39,29 @@ class Matriz_Binaria:
             if actual == self.datos.primero:
                 break
         print()
-
-    def comparar_filas(self):
-        filas_dict = {}
         
-        for dato in self.datos:
-            if dato.x not in filas_dict:
-                filas_dict[dato.x] = [0] * self.columnas
-            filas_dict[dato.x][dato.y] = dato.dato
-
-        filas_iguales = []
-        for i in range(self.filas):
-            for j in range(i + 1, self.filas):
-                if filas_dict.get(i) == filas_dict.get(j):
-                    filas_iguales.append((i, j))
-
-        if filas_iguales:
-            for (a, b) in filas_iguales:
-                print(f"Fila {a + 1} es idéntica a Fila {b + 1}")
-        else:
-            print("No hay filas idénticas.")
+    def volver_binario(self):
+        matriz_binaria = Matrices(self.filas, self.columnas, self.nombre + '_binaria')
+        actual = self.datos.primero
+        if actual:
+            while True:
+                x, y, valor = actual.dato
+                dato_binario = 1 if valor > 0 else 0
+                matriz_binaria.insertar(x, y, dato_binario)
+                actual = actual.siguiente
+                if actual == self.datos.primero:
+                    break
+        return matriz_binaria
+    
+    def trabajar_resultante(self, binarias):
+        matriz_resultante = Matrices(self.filas, self.columnas, self.nombre + '_resultante')
+        actual = self.datos.primero
+        if actual:
+            while True:
+                x, y, valor = actual.dato
+                dato_resultante = valor * 3
+                matriz_resultante.insertar(x, y, dato_resultante)
+                actual = actual.siguiente
+                if actual == self.datos.primero:
+                    break
+        return matriz_resultante

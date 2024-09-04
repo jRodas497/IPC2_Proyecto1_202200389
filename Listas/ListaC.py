@@ -1,6 +1,6 @@
-from .nodo_Troncal import Nodo
+from Listas.Nodo import Nodo
 
-class lista_Troncal:
+class ListaC:
     def __init__(self):
         self.primero = None
         self.size = 0
@@ -35,3 +35,4 @@ class lista_Troncal:
             if actual == self.primero:
                 break
         print()
+        

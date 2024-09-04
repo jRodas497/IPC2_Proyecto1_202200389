@@ -1,10 +1,6 @@
-'''
------    LISTA CIRCULAR RESULTANTE    -----
-'''
+from Listas_Binaria.nodo_Binaria import Nodo_Binaria as Nodo
 
-from .nodo_Resultante import Nodo_Resultante as Nodo
-
-class listaCircular_Resultante:
+class listaC_Binaria:
     def __init__(self):
         self.primero = None
         self.size = 0
@@ -26,8 +22,14 @@ class listaCircular_Resultante:
         self.size += 1
 
     def imprimir(self):
+        if self.primero is None:
+            print("La lista está vacía")
+            return
+
         actual = self.primero
-        for i in range(self.size):
-            print(actual.dato)
+        while True:
+            print(f"({actual.dato.x}, {actual.dato.y}): {actual.dato.dato}", end=" -> ")
             actual = actual.siguiente
-            i += 1
+            if actual == self.primero:
+                break
+        print()

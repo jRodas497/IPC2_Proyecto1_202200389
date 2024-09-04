@@ -1,21 +1,21 @@
+import xml.etree.ElementTree as ET
 import tkinter as tk
 from tkinter import filedialog
-import xml.etree.ElementTree as ET
-from Listas_Troncal.listaCircular_Troncal import *
-from Listas_Troncal.matriz_Troncal import *
-from Listas_Troncal.datos_Troncal import *
-from Listas_Binaria.matriz_Binaria import *
-
+from Listas.ListaC import ListaC
+from Listas.Matrices import Matrices
 
 def Menu():
     opcion = 0
     print(' ------------- Menu Principal -------------')
     print('1. Cargar Archivo')
-    print('2. Procesar Archivo')
-    print('3. Escribir Archivo de Salida')
-    print('4. Mostrar Datos de Estudiante')
-    print('5. Generar Gráfica')
-    print('6. Salir')
+    print('2. Listado de Matrices')
+    print('3. Procesar Archivo a Binario')
+    print('4. Lista de Matrices Binarias')
+    print('5. Escribir Archivo de Salida')
+    print('6. Lista de matrices de Salida')
+    print('7. Mostrar Datos de Estudiante')
+    print('8. Generar Gráfica')
+    print('9. Salir')
     print(' ------------------------------------------')
     print('')
 
@@ -51,7 +51,7 @@ def abrir_archivo():
                 print("--------------------------------------------------")
                 print()
             
-            leerArchivoET(ruta)
+            return leerArchivoET(ruta)
         except Exception as e:
             print(f"Error al leer el archivo: {e}")
 
@@ -60,86 +60,110 @@ def leerArchivoET(rutaArchivo):
         tree = ET.parse(rutaArchivo)
         root = tree.getroot()
         
-        lista_t = lista_Troncal()
+        lista_t = ListaC()
     
         for matriz_xml in root:
             nombre_matriz = matriz_xml.attrib['nombre']
             filas_n = int(matriz_xml.attrib['n'])
             columnas_m = int(matriz_xml.attrib['m'])
             
-            if filas_n and columnas_m:
-                datos_cantidad = (filas_n * columnas_m)
-            
-            matrizTroncal = Matriz_Troncal(filas_n, columnas_m, nombre_matriz)
-            print(f"Matriz creada: {nombre_matriz} con {filas_n} filas y {columnas_m} columnas")
+            matrizTroncal = Matrices(filas_n, columnas_m, nombre_matriz)
             
             for dt in matriz_xml:
                 x = int(dt.attrib['x'])
                 y = int(dt.attrib['y'])
                 dato = int(dt.text)
                 
-                datoTroncal = Datos_Troncal(x, y, dato)
-                lista_t.insertar(datoTroncal)
                 matrizTroncal.insertar(x, y, dato)
         
-        lista_t.imprimir()
-        matrizTroncal.imprimir()
-        
-        ###BIN
-        nombre_binario = nombre_matriz + '_bin'
-        matrizBinaria = Matriz_Binaria(filas_n, columnas_m, nombre_binario)
-        for dt in matriz_xml.findall('dato'):
-            x = int(dt.get('x'))
-            y = int(dt.get('y'))
-            dato = int(dt.text.strip())
-            matrizBinaria.insertar(x, y, 1 if dato > 0 else 0)
-        
-        matriz_binaria_global = matrizBinaria
-        print(f"Matriz binaria creada: {nombre_binario}")
-        
-        if matrizTroncal.contador_datos != datos_cantidad:
-            print(f"Advertencia: Se esperaban {datos_cantidad} datos, pero se insertaron {matrizTroncal.contador_datos}.")
+
+            lista_t.insertar(matrizTroncal)
+            print(f"Matriz creada: {nombre_matriz} con {filas_n} filas y {columnas_m} columnas")
+        return lista_t
 
     except ET.ParseError as pe:
         print(f"Error al procesar el archivo XML: {pe}")
     except Exception as e:
         print(f"Error inesperado: {e}")
-            
-def procesar_archivo():
-    global matriz_binaria_global
-    if matriz_binaria_global:
-        matriz_binaria_global.imprimir()
-        matriz_binaria_global.comparar_filas()
-    else:
-        print("No hay registros anteriores. Por favor, cargue un archivo primero.")
-
 
 if __name__ == '__main__':
+    lista = None
+    lista_b = ListaC()
+    lista_r = ListaC()
     opc = 0
     
-    while opc != 6:
+    while opc != 8:
         opc = Menu()
         if opc == 1:
             root = tk.Tk()
-            abrir_archivo()
+            lista = abrir_archivo()
 
         if opc == 2:
-            procesar_archivo()
+            if lista:
+                actual = lista.primero
+                if actual:
+                    while True:
+                        actual.dato.imprimir()
+                        actual = actual.siguiente
+                        if actual == lista.primero:
+                            break
+            else:
+                print("No hay datos para mostrar. Cargue el archivo primero.")
+            print()
             
         if opc == 3:
-###         escribirArchivoSalida()
+            if lista:
+                print('Procesando archivo...')
+                print()
+                actual = lista.primero
+                if actual:
+                    while True:
+                        matriz_01 = actual.dato.volver_binario()
+                        print(f'Matriz binaria generada: {matriz_01.nombre}')
+                        lista_b.insertar(matriz_01)
+                        actual = actual.siguiente
+                        if actual == lista.primero:
+                            break
+                    print()
+                    print('Listado de matrices binarias generadas.')
+            else:
+                print("No se encuentra ninguna matriz existente.")
+            
             print()
             
         if opc == 4:
-            datosEstudiante()
-            print()
+            if lista_b.primero:
+                actual = lista_b.primero
+                if actual:
+                    while True:
+                        actual.dato.imprimir()
+                        actual = actual.siguiente
+                        if actual == lista_b.primero:
+                            break
+            else:
+                print("Aún no se han generado matrices binarias.")
             
         if opc == 5:
 ###         generarGrafica()
             print()
             
         if opc == 6:
-            print('Hasta luego!')
+            datosEstudiante()
+            break
+        
+        if opc == 7:
+            print('Función pendiente de implementar')
+        
+        if opc == 8:
+            print('Función pendiente de implementar')
+        
+        if opc == 8:
+            print(' --------------- Hasta luego --------------')
+            print()
+            print('       Gracias por utilizar el programa!')
+            print()
+            print()
+            print()
             break
         
         print()
