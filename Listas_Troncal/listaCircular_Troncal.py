@@ -7,6 +7,8 @@ class lista_Troncal:
 
     def insertar(self, dato):
         nuevo = Nodo(dato)  # Creamos un nuevo nodo
+        
+#       filas, columnas, dato
 
         # Si la lista está vacía
         if self.primero is None:
