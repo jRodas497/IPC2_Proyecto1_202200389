@@ -4,9 +4,19 @@ class ListaC:
     def __init__(self):
         self.primero = None
         self.size = 0
+        
+    def __len__(self):
+        if not self.primero:
+            return 0
+        actual = self.primero
+        count = 1
+        while actual.siguiente != self.primero:
+            count += 1
+            actual = actual.siguiente
+        return count
 
-    def insertar(self, dato):
-        nuevo = Nodo(dato)  # Creamos un nuevo nodo
+    def insertar(self, dato, index = None):
+        nuevo = Nodo(dato, index)  # Creamos un nuevo nodo
         
 #       filas, columnas, dato
 
@@ -30,9 +40,30 @@ class ListaC:
 
         actual = self.primero
         while True:
-            print(f"({actual.dato.x}, {actual.dato.y}): {actual.dato.dato}", end=" -> ")
+            print(f"({actual.dato}, {actual.dato.y}): {actual.dato.dato}", end=" -> ")
             actual = actual.siguiente
             if actual == self.primero:
                 break
         print()
+        
+    def binario(self):
+        patron = ''
+        actual = self.primero
+        while True:
+            patron += "1" if int(actual.dato) > 0 else "0"
+            actual = actual.siguiente
+            if actual == self.primero:
+                break
+        return patron
+    
+    def mergeFila(self, fila):
+        actual = self.primero
+        actualf = fila.primero
+        while True:
+            actual.dato = str(int(actual.dato) + int(actualf.dato))
+            actual = actual.siguiente
+            actualf = actualf.siguiente
+            if actual == self.primero or actualf == fila.primero:
+                break
+        return self
         
